@@ -1,4 +1,4 @@
-# Readme for SAM project
+# Readme for Stock practice project
 ## Part 1:
 1.```git clone https://github.com/ohadkorenok/stock_quote_project```
 
