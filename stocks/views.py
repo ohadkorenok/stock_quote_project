@@ -4,7 +4,7 @@ from stocks.utils import should_refresh, handle_query, reset_counter, format_mes
 from django.http import JsonResponse
 
 
-def symbol(request, symbol):  # FIXME:: if the stock is not in the query... Should we save it too?
+def symbol(request, symbol):
     try:
         query_object = Query.objects.get(symbol=symbol.upper())
         query_object_dict = query_object.to_dict()
