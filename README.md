@@ -1,4 +1,4 @@
-# Readme for Stock practice project
+# Readme for stock practice project
 ## Part 1:
 1.```git clone https://github.com/ohadkorenok/stock_quote_project```
 
