@@ -1,6 +1,7 @@
 # Readme for stock practice project
 ## Part 1:
-1.```git clone https://github.com/ohadkorenok/stock_quote_project```
+
+1. ```git clone https://github.com/ohadkorenok/stock_quote_project```
 
 2. ```docker-compose build --no-cache```
 
