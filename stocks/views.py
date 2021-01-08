@@ -10,16 +10,15 @@ def symbol(request, symbol):  # FIXME:: if the stock is not in the query... Shou
         query_object_dict = query_object.to_dict()
         should_refresh_query = should_refresh(query_object)
         if should_refresh_query:
-            query_object_dict = handle_query(query_object.symbol)
-        result = format_message(query_object_dict, 200)
+            result = handle_query(query_object.symbol)
+        else:
+            result = format_message(query_object_dict, 200)
 
     except MultipleObjectsReturned as e:
         result = format_message('Error! Multiple objects returned', 500)
 
     except ObjectDoesNotExist as e:
         result = handle_query(symbol)
-        if 'status' in result and result['status'] == 200:
-            result = format_message(result, 200)
 
     return JsonResponse(result)
 

@@ -28,14 +28,15 @@ def create_or_update_object_and_increment_query_count(object_from_query: dict) -
     """
     This method creates object and inserts it to the DB.In additon, it creates a counter (if not exist already) and
      increment its value"""
+
     query_object, created = Query.objects.update_or_create(
         symbol=object_from_query['symbol'],
-        defaults={'exchange': object_from_query['exchange'],
-                  'short_name': object_from_query['shortName'],
-                  'price': object_from_query['regularMarketPrice'],
-                  'currency': object_from_query['currency'],
-                  'change_percent': object_from_query['regularMarketChangePercent'],
-                  'avg_daily_volume_10day': object_from_query['averageDailyVolume10Day'],
+        defaults={'exchange': object_from_query.get('exchange', ''),
+                  'short_name': object_from_query.get('shortName', ''),
+                  'price': object_from_query.get('regularMarketPrice', 0),
+                  'currency': object_from_query.get('currency', 'USD'),
+                  'change_percent': object_from_query.get('regularMarketChangePercent', 0),
+                  'avg_daily_volume_10day': object_from_query.get('averageDailyVolume10Day', 0),
                   'update_time': datetime.now(tz=timezone.utc),
                   'trading_hours': True if object_from_query['marketState'] == 'REGULAR' else False}
     )
@@ -70,9 +71,9 @@ def handle_query(symbol: str) -> dict:
     dict created object """
     response_object = retrieve_from_query(symbol)
     if response_object['status'] != 200:
-        return response_object
+        return response_object  # {result:...,status:...}
     query_object = create_or_update_object_and_increment_query_count(response_object['result'][0])
-    return query_object.to_dict()
+    return {'result': query_object.to_dict(), 'status': 200}
 
 
 def reset_counter():
