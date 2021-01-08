@@ -2,10 +2,15 @@ from stocks.models import Query, PaymentTrack
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from stocks.utils import should_refresh, handle_query, reset_counter, format_message
 from django.http import JsonResponse
+from ratelimit.decorators import ratelimit
 
 
+@ratelimit(key='ip', rate='10/m', method=['GET'])
 def symbol(request, symbol):
     try:
+        was_limited = getattr(request, 'limited', False)
+        if was_limited:
+            return JsonResponse(format_message('Error! too many requests per minute!', 429))
         query_object = Query.objects.get(symbol=symbol.upper())
         query_object_dict = query_object.to_dict()
         should_refresh_query = should_refresh(query_object)
