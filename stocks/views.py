@@ -1,11 +1,11 @@
 from stocks.models import Stock, PaymentTrack
-from stocks.utils import should_refresh_from_api, get_data_from_api_and_update_db, reset_counter, encode_to_json
+from stocks.utils import should_refresh_from_api, get_data_from_api_and_update_db, encode_to_json
 from django.http import JsonResponse
 from ratelimit.decorators import ratelimit
 
 
 @ratelimit(key='ip', rate='10/m', method=['GET'])
-def symbol(request, symbol: str):
+def get_data_from_symbol(request, symbol: str):
     """
     This method gets a symbol GET request represents the stock , checks whether it's on our DB and if not, queries
     data from Yahoo API, and update the DB (also a query counter).
@@ -27,27 +27,21 @@ def symbol(request, symbol: str):
     if status != 200:  # Given an error
         return JsonResponse({'result': result}, status=status)
 
-    return JsonResponse(encode_to_json(result), status=status)
+    return JsonResponse({'result': encode_to_json(result)}, status=status)
 
 
-def reset(request):
+def reset_cost(request):
     """
     This view gets a GET request and resets the query counter in the DB.
     """
-    try:
-        reset_counter()
-        return JsonResponse({'result': 'success'}, status=200)
-    except Exception as e:
-        return JsonResponse({'result': 'Error ! Could not reset the counter!'}, status=500)
+    payment_object, created = PaymentTrack.objects.update_or_create(id=1, defaults={'number_of_upstream_queries': 0})
+    return JsonResponse({'result': 'success'}, status=200)
 
 
-def get_total_cost(request):
+def query_total_cost(request):
     """
     This method gets the total cost of the queries since the last counter reset.
     Notice we use get or create for maintaining one row every time.
     """
-    try:
-        payment_row = PaymentTrack.objects.get_or_create()[0]
-        return JsonResponse({'result': payment_row.query_cost * payment_row.number_of_upstream_queries}, status=200)
-    except Exception as e:
-        return JsonResponse({'result': 'error in getting the total cost! '}, status=500)
+    payment_object, created = PaymentTrack.objects.get_or_create()
+    return JsonResponse({'result': payment_object.query_cost * payment_object.number_of_upstream_queries}, status=200)

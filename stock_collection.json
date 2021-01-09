@@ -1,17 +1,17 @@
 {
 	"info": {
-		"_postman_id": "f004ed47-466f-47e8-b8f0-fdd582b7a231",
+		"_postman_id": "85be1086-4fb2-4b9c-8afc-0c335d84a161",
 		"name": "Stocks",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "symbol",
+			"name": "get data from symbol",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8000/stocks/QQQQQ",
+					"raw": "http://localhost:8000/stocks/spy/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -19,19 +19,20 @@
 					"port": "8000",
 					"path": [
 						"stocks",
-						"QQQQQ"
+						"spy",
+						""
 					]
 				},
-				"description": "# URL : /stocks/SYMBOL\n## This route gets a symbol and returns a JSON object representing the stock data from Yahoo API"
+				"description": "# URL : stocks/SYMBOL\n\n## This route gets a symbol and returns a JSON object representing the stock data from Yahoo API"
 			},
 			"response": [
 				{
-					"name": "symbol",
+					"name": "symbol - 404 Response",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/stocks/jets",
+							"raw": "http://localhost:8000/stocks/QQQQQ",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -39,17 +40,17 @@
 							"port": "8000",
 							"path": [
 								"stocks",
-								"jets"
+								"QQQQQ"
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
+					"status": "Not Found",
+					"code": 404,
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "Date",
-							"value": "Fri, 08 Jan 2021 18:38:43 GMT"
+							"value": "Fri, 08 Jan 2021 18:42:39 GMT"
 						},
 						{
 							"key": "Server",
@@ -65,7 +66,7 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "197"
+							"value": "41"
 						},
 						{
 							"key": "X-Content-Type-Options",
@@ -77,7 +78,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"result\": {\n        \"symbol\": \"JETS\",\n        \"update_time\": \"2021-01-08T18:38:43.364Z\",\n        \"exchange\": \"PCX\",\n        \"short_name\": \"U.S. Global Jets ETF\",\n        \"price\": 22.0517,\n        \"currency\": \"USD\",\n        \"change_percent\": -1.3346746\n    }\n}"
+					"body": "{\n    \"result\": \"Could not find Symbol QQQQQ\"\n}"
 				},
 				{
 					"name": "rate-limiter",
@@ -134,12 +135,12 @@
 					"body": "{\n    \"result\": \"Error! too many requests per minute!\"\n}"
 				},
 				{
-					"name": "symbol - could not find symbol",
+					"name": "symbol - 200 OK response",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/stocks/QQQQQ",
+							"raw": "http://localhost:8000/stocks/QQQ",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -147,21 +148,21 @@
 							"port": "8000",
 							"path": [
 								"stocks",
-								"QQQQQ"
+								"QQQ"
 							]
 						}
 					},
-					"status": "Not Found",
-					"code": 404,
+					"status": "OK",
+					"code": 200,
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "Date",
-							"value": "Fri, 08 Jan 2021 18:42:39 GMT"
+							"value": "Sat, 09 Jan 2021 15:12:06 GMT"
 						},
 						{
 							"key": "Server",
-							"value": "WSGIServer/0.2 CPython/3.9.1"
+							"value": "WSGIServer/0.2 CPython/3.6.8"
 						},
 						{
 							"key": "Content-Type",
@@ -173,7 +174,7 @@
 						},
 						{
 							"key": "Content-Length",
-							"value": "41"
+							"value": "200"
 						},
 						{
 							"key": "X-Content-Type-Options",
@@ -185,17 +186,17 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"result\": \"Could not find Symbol QQQQQ\"\n}"
+					"body": "{\n    \"result\": {\n        \"symbol\": \"QQQ\",\n        \"update_time\": \"2021-01-09T15:11:15.957Z\",\n        \"exchange\": \"NMS\",\n        \"short_name\": \"Invesco QQQ Trust, Series 1\",\n        \"price\": 319.03,\n        \"currency\": \"USD\",\n        \"change_percent\": 1.285792\n    }\n}"
 				}
 			]
 		},
 		{
-			"name": "reset",
+			"name": "reset cost",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8000/stocks/reset",
+					"raw": "http://localhost:8000/stocks/reset_cost",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -203,10 +204,10 @@
 					"port": "8000",
 					"path": [
 						"stocks",
-						"reset"
+						"reset_cost"
 					]
 				},
-				"description": "# URL : stocks/reset\n## This route gets a GET request and reset the counter correspondingly."
+				"description": "# URL : stocks/reset_cost\n## This route gets a GET request and reset the cost counter correspondingly."
 			},
 			"response": [
 				{
@@ -266,7 +267,7 @@
 			]
 		},
 		{
-			"name": "total_cost",
+			"name": "queries total_cost",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -282,7 +283,7 @@
 						"total_cost"
 					]
 				},
-				"description": "# URL: stocks/total_cost\n## This route gets a GET request and returns the total cost of the queries since last reset"
+				"description": "# URL : stocks/total_cost\n\n## This route gets a GET request and returns the total cost of the queries since last reset"
 			},
 			"response": [
 				{
