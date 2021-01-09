@@ -34,7 +34,7 @@ def reset_cost(request):
     """
     This view gets a GET request and resets the query counter in the DB.
     """
-    payment_object, created = PaymentTrack.objects.update_or_create(id=1, defaults={'number_of_upstream_queries': 0})
+    PaymentTrack.objects.update_or_create(id=1, defaults={'number_of_upstream_queries': 0})
     return JsonResponse({'result': 'success'}, status=200)
 
 
