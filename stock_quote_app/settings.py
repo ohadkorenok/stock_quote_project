@@ -28,6 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '#v#p%@0mgcq$sq+o#xm4-k(8e96-q*p)n-qi)v6@ege78pms%('
 
+YAHOO_SERVICE_URL = os.environ.get("YAHOO_SERVICE_URL")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

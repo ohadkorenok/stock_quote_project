@@ -3,8 +3,7 @@ from json import loads
 from stocks.models import Stock, PaymentTrack
 from django.db.models import F
 from datetime import datetime, timedelta, timezone
-
-import os
+from stock_quote_app.settings import YAHOO_SERVICE_URL
 
 
 def create_or_update_object_and_increment_query_count(object_from_query: dict) -> Stock:
@@ -25,9 +24,9 @@ def create_or_update_object_and_increment_query_count(object_from_query: dict) -
                   'update_time': datetime.now(tz=timezone.utc),
                   'trading_hours': True if object_from_query['marketState'] == 'REGULAR' else False}
     )
-    payment_row = PaymentTrack.objects.get_or_create(id=1)[0]
-    payment_row.number_of_upstream_queries = F('number_of_upstream_queries') + 1
-    payment_row.save()
+    payment_object, created = PaymentTrack.objects.get_or_create(id=1)
+    payment_object.number_of_upstream_queries = F('number_of_upstream_queries') + 1
+    payment_object.save()
     return query_object
 
 
@@ -59,8 +58,7 @@ def get_data_from_api_and_update_db(symbol: str) -> tuple:
 
     return : tuple of : (Stock object or str representing error, status_code:int)
     """
-    query_url_prefix = os.environ.get("YAHOO_SERVICE_URL")
-    query_url = f'{query_url_prefix}{symbol}'
+    query_url = f'{YAHOO_SERVICE_URL}{symbol}'
     query_response = get(query_url)
     if query_response.status_code != 200:
         return f'Error on retrieving symbol from query {symbol}', query_response.status_code
@@ -69,15 +67,6 @@ def get_data_from_api_and_update_db(symbol: str) -> tuple:
         return f'Could not find Symbol {symbol}', 404
     stock_object = create_or_update_object_and_increment_query_count(quote_response['result'][0])
     return stock_object, 200
-
-
-def reset_counter():
-    """
-    This method resets the query counter. Notice that we use get or create to maintain one record only for the counter.
-    """
-    payment_row = PaymentTrack.objects.get_or_create(id=1)[0]
-    payment_row.number_of_upstream_queries = 0
-    payment_row.save()
 
 
 def encode_to_json(stock_object: Stock):
